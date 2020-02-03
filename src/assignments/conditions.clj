@@ -1,34 +1,40 @@
-(ns assignments.conditions)
+(ns assignments.conditions
+  (:require
+    [assignments.util :refer :all]))
 
 (defn safe-divide
   "Returns the result of x/y unless y is 0. Returns nil when y is 0"
   {:level        :easy
    :use          '[when-not zero?]
-   :implemented? false}
-  [x y])
+   :implemented? true}
+  [x y]
+  (when-not (zero? y) (quot x y)))
 
 (defn informative-divide
   "Returns the result of x/y unless y is 0. Returns :infinite when y is 0"
   {:level        :easy
    :use          '[if-not zero?]
-   :implemented? false}
-  [x y])
+   :implemented? true}
+  [x y]
+  (if-not (zero? y) (quot x y) :infinite))
 
 (defn harishchandra
   "Only returns truthy values as themselves.
   Falsy values(false and nil) return nil"
   {:level        :easy
    :use          '[when-let]
-   :implemented? false}
-  [x])
+   :implemented? true}
+  [x]
+  (when-let [value x] value))
 
 (defn yudishtira
   "Only returns truthy values as themselves.
   Falsy values(false and nil) return :ashwathama"
   {:level        :easy
    :use          '[if-let]
-   :implemented? false}
-  [x])
+   :implemented? true}
+  [x]
+  (if-let [value x] value :ashwathama))
 
 (defn duplicate-first
   "Returns coll with the first element duplicated.
@@ -36,8 +42,9 @@
   {:level        :easy
    :use          '[when-first concat]
    :alternates   '[empty? seq? conj into]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (when-first [first-element coll] (into [first-element] coll)))
 
 (defn five-point-someone
   "Returns :chetan-bhagat if y is 5.
@@ -46,13 +53,18 @@
   Otherwise it returns :universe"
   {:level        :easy
    :use          '[cond]
-   :implemented? false}
-  [x y])
+   :implemented? true}
+  [x y]
+  (cond
+    (= y 5) :chetan-bhagat
+    (= x 5) :satan-bhagat
+    (> x y) :greece
+    :else :universe))
 
 (defn conditions-apply
   "Given a collection of any length, returns:
   :wonder-woman if collection has a single occurrence of 1 and 3 in that order
-  :durga        if collection has a single occurrence of :a :b and :c in that order
+  :durga        if collection has a single occurrence of :a :and :c in that order
   :cleopatra    if collection has a single occurrence of [2 3] and [4 5] in that order
   :tuntun if none of the conditions apply"
   {:level        :medium
@@ -68,8 +80,12 @@
   (repeat-and-truncate (range 4) true true 6) => '(0 1 2 3 0 1)"
   {:level        :medium
    :use          '[cond->> concat take]
-   :implemented? false}
-  [coll rep? truncate? n])
+   :implemented? true}
+  [coll rep? truncate? n]
+  (cond->> coll
+           rep? (repeat)
+           truncate? (flatten)
+           true (take n)))
 
 (defn order-in-words
   "Given x, y and z, returns a vector consisting of
@@ -79,8 +95,12 @@
   (order-in-words 2 3 4) => [:z-greater-than-x]"
   {:level        :easy
    :use          '[cond-> conj]
-   :implemented? false}
-  [x y z])
+   :implemented? true}
+  [x y z]
+  (cond-> []
+          (> x y) (conj :x-greater-than-y)
+          (> y z) (conj :y-greater-than-z)
+          (> z x) (conj :z-greater-than-x)))
 
 (defn zero-aliases
   "Given a zero-like value(0,[],(),#{},{}) should
@@ -94,15 +114,25 @@
   \"\"  -> :empty-string"
   {:level        :easy
    :use          '[case]
-   :implemented? false}
-  [zero-like-value])
+   :implemented? true}
+  [zero-like-value]
+  (case zero-like-value
+    0 :zero
+    ([]) :empty
+    ('()) :empty
+    (#{}) :empty-set
+    ({}) :empty-map
+    ("") :empty-string
+    :not-zero))
 
 (defn zero-separated-palindrome
   "Given a sequence of numbers, increment the list
   and prepend a 0 to the incremented list concatenated
   with the reverse of the incremented list
   [1 2 3] -> (4 3 2 0 2 3 4)"
-  {:level :easy
-   :use '[as-> reverse]
-   :implemented? false}
-  [coll])
+  {:level        :easy
+   :use          '[as-> reverse]
+   :implemented? true}
+  [coll]
+  (as-> (map increment coll) collection
+        (concat (reverse collection) (cons 0 collection))))
