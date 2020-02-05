@@ -62,6 +62,10 @@
   (testing "max 3 digit sequence"
     (is (= [2 -1 2] (max-three-digit-sequence [1 2 -1 2 0])))))
 
+(deftest transpose-test
+  (testing "row column transformation"
+    (is (= [[1 1] [2 2] [3 3]] (transpose [[1 2 3] [1 2 3]])))))
+
 (deftest difference-test
   (testing "difference of two vectors"
     (is (= '(3) (difference [1 2] [1 2 3])))))
