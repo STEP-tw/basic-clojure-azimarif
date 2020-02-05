@@ -1,4 +1,6 @@
-(ns assignments.lists)
+(ns assignments.lists
+  (:require
+    [assignments.util :refer :all]))
 
 (defn map'
   "Implement a non-lazy version of map that accepts a
@@ -17,8 +19,15 @@
   {:level        :easy
    :use          '[loop recur]
    :dont-use     '[filter]
-   :implemented? false}
-  [pred coll])
+   :implemented? true}
+  [pred coll]
+  (loop [coll coll
+         result []]
+    (if (empty? coll) result
+                      (let [x (first coll)]
+                        (if (pred x)
+                          (recur (rest coll) (conj result x))
+                          (recur (rest coll) result))))))
 
 (defn reduce'
   "Implement your own multi-arity version of reduce
@@ -27,9 +36,12 @@
   {:level        :medium
    :use          '[loop recur]
    :dont-use     '[reduce]
-   :implemented? false}
-  ([f coll])
-  ([f init coll]))
+   :implemented? true}
+  ([f coll] (reduce' f (first coll) (rest coll)))
+  ([f init coll] (loop [coll coll
+                        result init]
+                   (if (empty? coll) result
+                                     (recur (rest coll) (f result (first coll)))))))
 
 (defn count'
   "Implement your own version of count that counts the
@@ -37,8 +49,11 @@
   {:level        :easy
    :use          '[loop recur]
    :dont-use     '[count]
-   :implemented? false}
-  ([coll]))
+   :implemented? true}
+  ([coll] (loop [xs coll
+                 count 0]
+            (if (empty? xs) count
+                            (recur (rest xs) (inc count))))))
 
 (defn reverse'
   "Implement your own version of reverse that reverses a coll.
@@ -46,8 +61,9 @@
   {:level        :easy
    :use          '[reduce conj seqable? when]
    :dont-use     '[reverse]
-   :implemented? false}
-  ([coll]))
+   :implemented? true}
+  ([coll]
+   (reduce conj '() coll)))
 
 (defn every?'
   "Implement your own version of every? that checks if every
@@ -55,8 +71,12 @@
   {:level        :easy
    :use          '[loop recur and]
    :dont-use     '[every?]
-   :implemented? false}
-  ([pred coll]))
+   :implemented? true}
+  ([pred coll]
+   (loop [xs coll
+          result true]
+     (if (empty? xs) result
+                     (recur (rest xs) (and result (pred (first xs))))))))
 
 (defn some?'
   "Implement your own version of some that checks if at least one
@@ -66,16 +86,23 @@
   {:level        :easy
    :use          '[loop recur or]
    :dont-use     '[some]
-   :implemented? false}
-  ([pred coll]))
+   :implemented? true}
+  ([pred collection]
+   (loop [coll collection
+          result nil]
+     (cond
+       (empty? coll) result
+       (pred (first coll)) (recur (rest coll) true)
+       :else (recur (rest coll) (or result nil))))))
 
 (defn ascending?
   "Verify if every element is greater than or equal to its predecessor"
   {:level        :easy
    :use          '[partition every? partial apply <=]
    :dont-use     '[loop recur]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (every? (partial apply <=) (partition 2 1 coll)))
 
 (defn distinct'
   "Implement your own lazy sequence version of distinct which returns
@@ -103,8 +130,9 @@
   {:level        :medium
    :use          '[map + rest]
    :dont-use     '[loop recur partition]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (map + coll (rest coll)))
 
 (defn max-three-digit-sequence
   "Given a collection of numbers, find a three digit sequence that
@@ -134,8 +162,9 @@
   {:level        :easy
    :use          '[remove set]
    :dont-use     '[loop recur if]
-   :implemented? false}
-  [coll1 coll2])
+   :implemented? true}
+  [coll1 coll2]
+  (remove (into #{} coll1) (into #{} coll2)))
 
 (defn union
   "Given two collections, returns a new collection with elements from the second
@@ -181,8 +210,9 @@
   elements whose index is either divisible by three or five"
   {:level        :easy
    :use          '[keep-indexed when :optionally map-indexed filter]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (keep-indexed #(if (or (is-divisible %1 3) (is-divisible %1 5)) %2) coll))
 
 (defn sqr-of-the-first
   "Given a collection, return a new collection that contains the
@@ -191,8 +221,10 @@
   [4 5 6] => [16 16 16]"
   {:level        :easy
    :use          '[map constantly let]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (let [sqr-of-the-first (* (first coll) (first coll))]
+    (map (constantly sqr-of-the-first) coll)))
 
 (defn russian-dolls
   "Given a collection and a number, wrap each element in a nested vector
@@ -223,16 +255,22 @@
   {:level        :easy
    :use          '[map cycle]
    :dont-use     '[loop recur map-indexed take take-nth]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (map * (cycle [1 1 0]) coll))
 
 (defn palindrome?
   "Implement a recursive palindrome check of any given sequence"
   {:level        :easy
    :use          '[empty? loop recur butlast rest]
    :dont-use     '[reverse]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (loop [coll coll]
+    (cond
+      (empty? coll) true
+      (not= (last coll) (first coll)) false
+      :else (recur (rest (butlast coll))))))
 
 (defn index-of
   "index-of takes a sequence and an element and finds the index
@@ -241,8 +279,14 @@
   {:level        :easy
    :use          '[loop recur rest]
    :dont-use     '[.indexOf memfn]
-   :implemented? false}
-  [coll n])
+   :implemented? true}
+  [coll n]
+  (loop [coll coll
+         count -1]
+    (cond
+      (empty? coll) -1
+      (= n (first coll)) (inc count)
+      :else (recur (rest coll) (inc count)))))
 
 (defn validate-sudoku-grid
   "Given a 9 by 9 sudoku grid, validate it."
