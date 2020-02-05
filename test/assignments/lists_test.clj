@@ -58,6 +58,10 @@
   (testing "sum of adjacent numbers"
     (is (= [3 5] (sum-of-adjacent-digits [1 2 3])))))
 
+(deftest max-three-digit-sequence-test
+  (testing "max 3 digit sequence"
+    (is (= [2 -1 2] (max-three-digit-sequence [1 2 -1 2 0])))))
+
 (deftest difference-test
   (testing "difference of two vectors"
     (is (= '(3) (difference [1 2] [1 2 3])))))

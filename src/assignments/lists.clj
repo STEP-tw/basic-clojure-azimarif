@@ -145,7 +145,11 @@
    :use          '[map next nnext max-key partial apply + if ->>]
    :dont-use     '[loop recur partition]
    :implemented? false}
-  [coll])
+  [coll]
+  (:list (apply max-key :sum (map (fn [a b c] {:sum (+ a b c) :list [a b c]})
+                                  coll
+                                  (next coll)
+                                  (nnext coll)))))
 
 ;; transpose is a def. Not a defn.
 (def
