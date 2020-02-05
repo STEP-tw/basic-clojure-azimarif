@@ -20,3 +20,9 @@
     value))
 
 (defn is-divisible [dividend divisor] (zero? (mod dividend divisor)))
+
+(defn de-duplicate [coll number]
+  (cond
+    (empty? coll) (conj [] number)
+    (not= number (last coll)) (conj coll number)
+    :else coll))
