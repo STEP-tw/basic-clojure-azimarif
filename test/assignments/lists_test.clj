@@ -46,6 +46,10 @@
   (testing "not ascending test"
     (is (false? (ascending? [1 2 3 1])))))
 
+(deftest distinct-test
+  (testing "distinct numbers in the list"
+    (is (= [1 3 2] (distinct' [1 2 3 1 2])))))
+
 (deftest sum-of-adjacent-digits-test
   (testing "sum of adjacent numbers"
     (is (= [3 5] (sum-of-adjacent-digits [1 2 3])))))

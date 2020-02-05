@@ -111,8 +111,9 @@
   {:level        :medium
    :use          '[lazy-seq set conj let :optionally letfn]
    :dont-use     '[loop recur distinct]
-   :implemented? false}
-  [coll])
+   :implemented? true}
+  [coll]
+  (lazy-seq (set coll)))
 
 (defn dedupe'
   "Implement your own lazy sequence version of dedupe which returns
@@ -164,7 +165,7 @@
    :dont-use     '[loop recur if]
    :implemented? true}
   [coll1 coll2]
-  (remove (into #{} coll1) (into #{} coll2)))
+  (remove (set coll1) (set coll2)))
 
 (defn union
   "Given two collections, returns a new collection with elements from the second
