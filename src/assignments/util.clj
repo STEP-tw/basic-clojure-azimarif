@@ -23,6 +23,6 @@
 
 (defn de-duplicate [coll number]
   (cond
-    (empty? coll) (conj [] number)
+    (empty? coll) (vector number)
     (not= number (last coll)) (conj coll number)
     :else coll))
