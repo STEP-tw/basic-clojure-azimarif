@@ -70,6 +70,10 @@
   (testing "difference of two vectors"
     (is (= '(3) (difference [1 2] [1 2 3])))))
 
+(deftest union-test
+  (testing "non-empty collection"
+    (is (= [1 2 3 4 5 6 7 8] (union [1 2 3 4] [5 6 1 2 7 8])))))
+
 (deftest third-or-fifth-test
   (testing "third-or-fifth"
     (is (= [1 4 2 7] (third-or-fifth [1 2 8 4 15 2 7])))))
