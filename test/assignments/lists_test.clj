@@ -74,6 +74,10 @@
   (testing "non-empty collection"
     (is (= [1 2 3 4 5 6 7 8] (union [1 2 3 4] [5 6 1 2 7 8])))))
 
+(deftest cross-product-test
+  (testing "cross-product"
+    (is (= [[1 4] [1 3] [1 5] [2 4] [2 3] [2 5] [3 4]] (cross-product [1 2 3] [4 3 5])))))
+
 (deftest third-or-fifth-test
   (testing "third-or-fifth"
     (is (= [1 4 2 7] (third-or-fifth [1 2 8 4 15 2 7])))))
